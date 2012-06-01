@@ -3,14 +3,30 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dijit/themes/claro/claro.css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dojo/dojo.js"></script>
-    	<script src="http://code.angularjs.org/1.0.0rc6/angular-1.0.0rc6.js"></script>
+    	<script src="http://code.angularjs.org/1.0.0rc10/angular-1.0.0rc10.js"></script>
     	<script src="angular-dojo.js"></script>
     	<script>
     	
     	function TestController($scope) {
-    		$scope.click = function() {
-    			alert($scope.date);
-    			alert($scope.date2);
+    		$scope.selection = 'CA';
+    		
+    		$scope.values = [
+			            {name:"Alabama", id:"AL"},
+			            {name:"Alaska", id:"AK"},
+			            {name:"American Samoa", id:"AS"},
+			            {name:"Arizona", id:"AZ"},
+			            {name:"Arkansas", id:"AR"},
+			            {name:"Armed Forces Europe", id:"AE"},
+			            {name:"Armed Forces Pacific", id:"AP"},
+			            {name:"Armed Forces the Americas", id:"AA"},
+			            {name:"California", id:"CA"},
+			            {name:"Colorado", id:"CO"},
+			            {name:"Connecticut", id:"CT"},
+			            {name:"Delaware", id:"DE"}
+			];
+    		
+    		$scope.alert = function(msg) {
+    			alert(msg);
     		};
     	};
     	
@@ -20,11 +36,11 @@
 	</head>
     <body class="claro" data-ng-controller="TestController">
     	<div>
-	    	<div data-calendar id="myCal" data-value="date" />
+	    	<div data-dojo-widget="dijit/Calendar" id="calendar" data-ng-model="date" on-change="alert(date)"/>
 	    </div>
-	    <div>
-	   		<div data-calendar id="myCal4" data-value="date2" />
-	   	</div>
-	    <div data-ng-click="click()">Test</div>
+	   	<select id="fSelect" data-dojo-filtering-select data-ng-model="selection" data-options="values" on-change="alert(selection)"></select>
+	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" disable="false" on-change="alert(text)" />
+	   	<input id="dateBox" data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" on-change="alert(date2)" />
+	   	
     </body>
 </html>
