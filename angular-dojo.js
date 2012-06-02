@@ -1,3 +1,23 @@
+if (!String.prototype.trim) {
+   String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
+}
+
+function parseProps(props, scope) {
+	var result = {};
+	if (props != undefined) {
+		var propsArray = props.split(",");
+		angular.forEach(propsArray, function (prop, index) {
+			var propSplit = prop.split(":");
+			if (scope.$parent[propSplit[1].trim()]) {
+				result[propSplit[0].trim()] = scope.$parent[propSplit[1].trim()];
+			}else{
+				result[propSplit[0].trim()] = eval(propSplit[1].trim());			
+			}
+		});
+	}
+	return result;
+};
+
 angular.module('angular-dojo', []).
 directive('dojoWidget', function() {
 	return {
@@ -7,75 +27,39 @@ directive('dojoWidget', function() {
 		require: '?ngModel',
 		scope: {
 			'ngModel': 'accessor',
-			'onChange' : 'expression',
-			'disable' : 'attribute'
+			'ngChange' : 'expression',
+			'dojoStore' : 'accessor',
+			'dojoProps' : 'attribute'
 		},
 		link: function(scope, element, attrs, model) {
+			console.log(scope);
 			require(["dojo/ready", "dijit/dijit",
-				attrs.dojoWidget, "dojo/date", "dojo/on"], function(ready, dijit, DojoWidget, date, on) {
+				attrs.dojoWidget, "dojo/on"], function(ready, dijit, DojoWidget, on) {
 				var elem = angular.element(element[0]);
-				console.log("disable:"+scope.disable);
 				
-				var disabled = false; // must be boolean value!
-				if (scope.disable != undefined && scope.disable == 'true') {
-					disabled = true;
-				}
-				
-				console.log("disabled:"+disabled);
-				
-				scope.widget = new DojoWidget({
-					value: scope.ngModel(),
-					disabled : disabled
-				}, element[0]);
-				on(scope.widget, "change", function(newValue) {
-					scope.ngModel(newValue);
-					
-					if (scope.onChange) {
-						scope.onChange();
+				ready(function () {
+					var properties = {};
+					if (attrs.dojoProps) {
+						properties = parseProps(scope.dojoProps, scope);
 					}
-				});
-				scope.ngModel(scope.widget.get('value'));
-			});
-		}
-	};
-}).
-directive('dojoFilteringSelect', function() {
-	return {
-		restrict: "A",
-		replace: false,
-		transclude: false,
-		require: '?ngModel',
-		scope: {
-			'ngModel': 'accessor',
-			'onChange' : 'expression',
-			'options' : 'accessor'
-		},
-		link: function(scope, element, attrs, model) {
-			require([
-			    "dojo/ready", "dojo/store/Memory", "dijit/form/FilteringSelect", "dojo/on"
-			], function(ready, Memory, FilteringSelect, on){
-			    
-			    var store = new Memory({
-			        data: scope.options()
-			    });
-			
-			    ready(function(){
-			        var filteringSelect = new FilteringSelect({
-			            id: element[0].id,
-			            name: element[0].id,
-			            value: scope.ngModel(),
-			            store: store,
-			            searchAttr: "name"
-			        }, element[0]);
-			        
-	   			    on(filteringSelect, "change", function(newValue) {
+					
+					if (attrs.dojoStore) {
+						properties.store = scope.dojoStore();
+					};
+					
+					properties.value = scope.ngModel();
+				
+					scope.widget = new DojoWidget(properties, element[0]);
+					on(scope.widget, "change", function(newValue) {
 						scope.ngModel(newValue);
-						if (scope.onChange()) {
-							scope.onChange();
+						
+						if (scope.ngChange) {
+							scope.ngChange();
 						}
 					});
-			        
-			    });
+					
+					scope.ngModel(scope.widget.get('value'));
+				});
 			});
 		}
 	};

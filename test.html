@@ -9,8 +9,13 @@
     	
     	function TestController($scope) {
     		$scope.selection = 'CA';
+    		$scope.search = "name";
     		
-    		$scope.values = [
+			require([
+			    "dojo/ready", "dojo/store/Memory", "dijit/form/FilteringSelect"
+			], function(ready, Memory, FilteringSelect){
+			    $scope.store = new Memory({
+			        data: [
 			            {name:"Alabama", id:"AL"},
 			            {name:"Alaska", id:"AK"},
 			            {name:"American Samoa", id:"AS"},
@@ -23,7 +28,9 @@
 			            {name:"Colorado", id:"CO"},
 			            {name:"Connecticut", id:"CT"},
 			            {name:"Delaware", id:"DE"}
-			];
+			        ]
+			    });
+			});
     		
     		$scope.alert = function(msg) {
     			alert(msg);
@@ -36,11 +43,11 @@
 	</head>
     <body class="claro" data-ng-controller="TestController">
     	<div>
-	    	<div data-dojo-widget="dijit/Calendar" id="calendar" data-ng-model="date" on-change="alert(date)"/>
+	    	<div data-dojo-widget="dijit/Calendar" id="calendar" data-ng-model="date" data-ng-change="alert(date)"/>
 	    </div>
-	   	<select id="fSelect" data-dojo-filtering-select data-ng-model="selection" data-options="values" on-change="alert(selection)"></select>
-	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" disable="false" on-change="alert(text)" />
-	   	<input id="dateBox" data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" on-change="alert(date2)" />
+	   	<select id="fSelect" data-dojo-widget="dijit/form/FilteringSelect" data-dojo-props="disabled: false, name: 'filterSelect', searchAttr: search" data-ng-model="selection" data-ng-change="alert(selection)" data-dojo-store="store"></select>
+	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" disable="true" data-ng-change="alert(text)" />
+	   	<input id="dateBox" data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" data-ng-change="alert(date2)" />
 	   	
     </body>
 </html>
