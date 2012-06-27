@@ -3,13 +3,14 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dijit/themes/claro/claro.css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dojo/dojo.js"></script>
-    	<script src="http://code.angularjs.org/1.0.0rc10/angular-1.0.0rc10.js"></script>
+    	<script src="http://code.angularjs.org/1.0.1/angular-1.0.1.js"></script>
     	<script src="angular-dojo.js"></script>
     	<script>
     	
     	function TestController($scope) {
     		$scope.selection = 'CA';
     		$scope.search = "name";
+    		$scope.date = new Date();
     		
 			require([
 			    "dojo/ready", "dojo/store/Memory", "dijit/form/FilteringSelect"
@@ -45,9 +46,12 @@
     	<div>
 	    	<div data-dojo-widget="dijit/Calendar" id="calendar" data-ng-model="date" data-ng-change="alert(date)"/>
 	    </div>
-	   	<select id="fSelect" data-dojo-widget="dijit/form/FilteringSelect" data-dojo-props="disabled: false, name: 'filterSelect', searchAttr: search" data-ng-model="selection" data-ng-change="alert(selection)" data-dojo-store="store"></select>
-	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" disable="true" data-ng-change="alert(text)" />
+	   	<select id="fSelect" data-dojo-widget="dijit/form/FilteringSelect" data-dojo-props="disabled: true; name: 'filterSelect'; searchAttr: search" data-ng-model="selection" data-ng-change="alert(selection)" data-dojo-store="store"></select>
+	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" data-ng-change="alert(text)" />
 	   	<input id="dateBox" data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" data-ng-change="alert(date2)" />
-	   	
+	   	<form id="myform">
+		    <input type="radio" data-dojo-widget="dijit/form/RadioButton" name="drink" id="radioOne" data-ng-model="drink" data-ng-change="alert(drink)" value="tea"/> <label for="radioOne">Tea</label> <br />
+		    <input type="radio" data-dojo-widget="dijit/form/RadioButton" name="drink" id="radioTwo" data-ng-model="drink" data-ng-change="alert(drink)" checked value="coffee"/> <label for="radioTwo">Coffee</label> <br />
+		</form>
     </body>
 </html>

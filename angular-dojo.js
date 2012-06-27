@@ -5,7 +5,7 @@ if (!String.prototype.trim) {
 function parseProps(props, scope) {
 	var result = {};
 	if (props != undefined) {
-		var propsArray = props.split(",");
+		var propsArray = props.split(";");
 		angular.forEach(propsArray, function (prop, index) {
 			var propSplit = prop.split(":");
 			if (scope.$parent[propSplit[1].trim()]) {
@@ -26,13 +26,12 @@ directive('dojoWidget', function() {
 		transclude: false,
 		require: '?ngModel',
 		scope: {
-			'ngModel': 'accessor',
-			'ngChange' : 'expression',
-			'dojoStore' : 'accessor',
-			'dojoProps' : 'attribute'
+			'ngModel' : "=",
+			'ngChange' : '&',
+			'dojoStore' : '&',
+			'dojoProps' : '@'
 		},
 		link: function(scope, element, attrs, model) {
-			console.log(scope);
 			require(["dojo/ready", "dijit/dijit",
 				attrs.dojoWidget, "dojo/on"], function(ready, dijit, DojoWidget, on) {
 				var elem = angular.element(element[0]);
@@ -47,18 +46,18 @@ directive('dojoWidget', function() {
 						properties.store = scope.dojoStore();
 					};
 					
-					properties.value = scope.ngModel();
+					properties.value = scope.ngModel;
 				
 					scope.widget = new DojoWidget(properties, element[0]);
 					on(scope.widget, "change", function(newValue) {
-						scope.ngModel(newValue);
-						
+						scope.ngModel = newValue;
+						scope.$apply();
 						if (scope.ngChange) {
 							scope.ngChange();
 						}
 					});
 					
-					scope.ngModel(scope.widget.get('value'));
+					scope.localModel = scope.widget.get('value');
 				});
 			});
 		}
