@@ -46,6 +46,7 @@
     	<div>
 	    	<div data-dojo-widget="dijit/Calendar" id="calendar" data-ng-model="date" data-ng-change="alert(date)"/>
 	    </div>
+	    <h1>Date 1: {{date}} </h1>
 	   	<select id="fSelect" data-dojo-widget="dijit/form/FilteringSelect" data-dojo-props="disabled: true; name: 'filterSelect'; searchAttr: search" data-ng-model="selection" data-ng-change="alert(selection)" data-dojo-store="store"></select>
 	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" data-ng-change="alert(text)" />
 	   	<input id="dateBox" data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" data-ng-change="alert(date2)" />

@@ -51,13 +51,14 @@ directive('dojoWidget', function() {
 					scope.widget = new DojoWidget(properties, element[0]);
 					on(scope.widget, "change", function(newValue) {
 						scope.ngModel = newValue;
-						scope.$apply();
+						scope.$digest();
 						if (scope.ngChange) {
 							scope.ngChange();
 						}
+						scope.$apply();
 					});
 					
-					scope.localModel = scope.widget.get('value');
+					scope.ngModel = scope.widget.get('value');
 				});
 			});
 		}
