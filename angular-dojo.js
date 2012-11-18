@@ -26,10 +26,11 @@ directive('dojoWidget', function() {
 		transclude: false,
 		require: '?ngModel',
 		scope: {
-			'ngModel' : "=",
+			'ngModel' : '=',
 			'ngChange' : '&',
 			'dojoStore' : '&',
-			'dojoProps' : '@'
+			'dojoProps' : '@',
+			'ngDisplayValue: '='
 		},
 		link: function(scope, element, attrs, model) {
 			require(["dojo/ready", "dijit/dijit",
@@ -49,6 +50,13 @@ directive('dojoWidget', function() {
 					properties.value = scope.ngModel;
 				
 					scope.widget = new DojoWidget(properties, element[0]);
+
+					on(scope.widget, "blur", function () {
+						if (scope.widget.displayedValue) {
+						  scope.ngDisplayValue=scope.widget.displayedValue;
+						}
+					});
+
 					on(scope.widget, "change", function(newValue) {
 						scope.ngModel = newValue;
 						scope.$digest();
