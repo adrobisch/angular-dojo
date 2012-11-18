@@ -30,7 +30,7 @@ directive('dojoWidget', function() {
 			'ngChange' : '&',
 			'dojoStore' : '&',
 			'dojoProps' : '@',
-			'ngDisplayValue' : '='
+			'dojoDisplayValue' : '='
 		},
 		link: function(scope, element, attrs, model) {
 			require(["dojo/ready", "dijit/dijit",
@@ -53,7 +53,7 @@ directive('dojoWidget', function() {
 
 					on(scope.widget, "blur", function () {
 						if (scope.widget.displayedValue) {
-						  scope.ngDisplayValue=scope.widget.displayedValue;
+						  scope.dojoDisplayValue = scope.widget.displayedValue;
 						}
 					});
 
