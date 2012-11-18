@@ -30,7 +30,7 @@ directive('dojoWidget', function() {
 			'ngChange' : '&',
 			'dojoStore' : '&',
 			'dojoProps' : '@',
-			'ngDisplayValue: '='
+			'ngDisplayValue' : '='
 		},
 		link: function(scope, element, attrs, model) {
 			require(["dojo/ready", "dijit/dijit",
