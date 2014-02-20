@@ -16,4 +16,4 @@ angular.module('app', [
 
 Examples
 --------
-See test.html
+See [test.html](https://github.com/amaury-d/angular-dojo/blob/master/test.html)
