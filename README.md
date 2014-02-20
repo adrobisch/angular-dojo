@@ -6,7 +6,7 @@ AngularJS directives for dojo widgets
 Usage
 -----
 eg:
-```<script src='directives/angular-dojo/js'></script>```
+```<script src='directives/angular-dojo.js'></script>```
 
 ```
 angular.module('app', [
