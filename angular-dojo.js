@@ -44,12 +44,16 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
                     });
                     
                     attrs.$observe('dojoStore', function() {
-                        scope.widget.set('store', scope.dojoStore);
+                        if (scope.dojoStore != undefined) {
+                            scope.widget.store = scope.dojoStore();     
+                        }
                     });
                     
                     attrs.$observe('ngModel', function() {
-                        scope.widget.set('value', scope.ngModel);
-                        scope.widget.set('checked', scope.ngModel);
+                        if (scope.ngModel != undefined) {
+                            scope.widget.set('value', scope.ngModel);
+                            scope.widget.set('checked', scope.ngModel);                         
+                        }
                     });
                     
                     on(scope.widget, "blur", function () {
