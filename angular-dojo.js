@@ -3,7 +3,7 @@ if (!String.prototype.trim) {
 }
 
 
-angular.module('angular-dojo', []).directive('dojoWidget', function() {
+angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
     
     var parseProps = function(props, scope) {
         var result = {};
@@ -53,24 +53,28 @@ angular.module('angular-dojo', []).directive('dojoWidget', function() {
                     });
                     
                     on(scope.widget, "blur", function () {
-                        if (scope.widget.displayedValue != undefined) {
-                          scope.dojoDisplayValue = scope.widget.displayedValue;
-                        }
+                        $timeout(function() {
+                            if (scope.widget.displayedValue != undefined) {
+                                scope.dojoDisplayValue = scope.widget.displayedValue;
+                            }                   
+                        });
                     });
 
                     on(scope.widget, "change", function(newValue) {
-                        scope.ngModel = newValue;
-                        if (scope.ngChange != undefined) {
-                            scope.ngChange();
-                        }
-                        scope.$apply();
+                        $timeout(function() {
+                            scope.ngModel = newValue;
+                            if (scope.ngChange != undefined) {
+                                scope.ngChange();
+                            }   
+                        });
                     });
 
                     on(scope.widget, 'click', function() {
-                        if (scope.ngClick != undefined) {
-                            scope.ngClick();
-                            scope.$apply();
-                        }
+                        $timeout(function() {
+                            if (scope.ngClick != undefined) {
+                                scope.ngClick();
+                            }
+                        });
                     });
                 });
             });
