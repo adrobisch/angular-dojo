@@ -52,7 +52,7 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
                     attrs.$observe('ngModel', function() {
                         if (scope.ngModel != undefined) {
                             scope.widget.set('value', scope.ngModel);
-                            scope.widget.set('checked', scope.ngModel);                         
+                            scope.widget.set('checked', scope.ngModel);
                         }
                     });
                     
@@ -60,16 +60,17 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
                         $timeout(function() {
                             if (scope.widget.displayedValue != undefined) {
                                 scope.dojoDisplayValue = scope.widget.displayedValue;
-                            }                   
+                            }
                         });
                     });
 
                     on(scope.widget, "change", function(newValue) {
+                        scope.ngModel = newValue;
                         $timeout(function() {
-                            scope.ngModel = newValue;
+                            scope.$apply();
                             if (scope.ngChange != undefined) {
                                 scope.ngChange();
-                            }   
+                            }
                         });
                     });
 
