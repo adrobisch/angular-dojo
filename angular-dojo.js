@@ -57,11 +57,9 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
                     });
                     
                     on(scope.widget, "blur", function () {
-                        $timeout(function() {
-                            if (scope.widget.displayedValue != undefined) {
-                                scope.dojoDisplayValue = scope.widget.displayedValue;
-                            }
-                        });
+                        if (scope.widget.displayedValue != undefined) {
+                            scope.dojoDisplayValue = scope.widget.displayedValue;
+                        }
                     });
 
                     on(scope.widget, "change", function(newValue) {
@@ -76,6 +74,7 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
 
                     on(scope.widget, 'click', function() {
                         $timeout(function() {
+                            scope.$apply();
                             if (scope.ngClick != undefined) {
                                 scope.ngClick();
                             }
