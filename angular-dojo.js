@@ -2,80 +2,84 @@ if (!String.prototype.trim) {
    String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
 }
 
-function parseProps(props, scope) {
-    var result = {};
-    if (props != undefined) {
-        var propsArray = props.split(";");
-        angular.forEach(propsArray, function (prop, index) {
-            var propSplit = prop.split(":");
-            if (scope.$parent[propSplit[1].trim()]) {
-                result[propSplit[0].trim()] = scope.$parent[propSplit[1].trim()];
-            }else{
-                result[propSplit[0].trim()] = eval(propSplit[1].trim());            
-            }
-        });
-    }
-    return result;
-};
 
-angular.module('angular-dojo', []).
-directive('dojoWidget', function() {
+angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
+    
+    var parseProps = function(props, scope) {
+        var result = {};
+        if (props != undefined) {
+            angular.forEach(props.split(";"), function (prop, index) {
+                var propSplit = prop.split(":");
+                if (scope.$parent[propSplit[1].trim()]) {
+                    result[propSplit[0].trim()] = scope.$parent[propSplit[1].trim()];
+                }else{
+                    result[propSplit[0].trim()] = eval(propSplit[1].trim());            
+                }
+            });
+        }
+        return result;
+    };
+    
     return {
         restrict: "A",
         replace: false,
         transclude: false,
         require: '?ngModel',
         scope: {
-            'ngModel' : '=',
+            'ngModel' : '=?',
             'ngClick' : '&',
             'ngChange' : '&',
             'dojoStore' : '&',
             'dojoProps' : '@',
-            'dojoDisplayValue' : '='
+            'dojoDisplayValue' : '=?'
         },
         link: function(scope, element, attrs, model) {
-            require(["dojo/ready", "dijit/dijit",
-                attrs.dojoWidget, "dojo/on"], function(ready, dijit, DojoWidget, on) {
-                var elem = angular.element(element[0]);
-                
-                ready(function () {
-                    var properties = {};
-                    if (attrs.dojoProps) {
-                        properties = parseProps(scope.dojoProps, scope);
-                    }
+            require(["dojo/ready", "dijit/dijit", attrs.dojoWidget, "dojo/on"], function(ready, dijit, DojoWidget, on) {
+              
+                ready(function () {                
+                    scope.widget = new DojoWidget({}, element[0]);
                     
-                    if (attrs.dojoStore) {
-                        properties.store = scope.dojoStore();
-                    };
+                    attrs.$observe('dojoProps', function(dojoProps) {
+                        scope.widget.set(parseProps(dojoProps, scope));
+                    });
                     
-                    properties.value = scope.ngModel;
-                
-                    scope.widget = new DojoWidget(properties, element[0]);
-
+                    attrs.$observe('dojoStore', function() {
+                        if (scope.dojoStore != undefined) {
+                            scope.widget.store = scope.dojoStore();     
+                        }
+                    });
+                    
+                    attrs.$observe('ngModel', function() {
+                        if (scope.ngModel != undefined) {
+                            scope.widget.set('value', scope.ngModel);
+                            scope.widget.set('checked', scope.ngModel);
+                        }
+                    });
+                    
                     on(scope.widget, "blur", function () {
-                        if (scope.widget.displayedValue) {
-                          scope.dojoDisplayValue = scope.widget.displayedValue;
+                        if (scope.widget.displayedValue != undefined) {
+                            scope.dojoDisplayValue = scope.widget.displayedValue;
                         }
                     });
 
                     on(scope.widget, "change", function(newValue) {
                         scope.ngModel = newValue;
-                        scope.$digest();
-                        if (scope.ngChange) {
-                            scope.ngChange();
-                        }
-                        scope.$apply();
+                        $timeout(function() {
+                            scope.$apply();
+                            if (scope.ngChange != undefined) {
+                                scope.ngChange();
+                            }
+                        });
                     });
 
-                    if (attrs.ngClick) {
-                        on(scope.widget, 'click', function() {
-                            if (scope.ngClick) {
+                    on(scope.widget, 'click', function() {
+                        $timeout(function() {
+                            scope.$apply();
+                            if (scope.ngClick != undefined) {
                                 scope.ngClick();
                             }
-                        });  
-                    }
-
-                    scope.ngModel = scope.widget.get('value');
+                        });
+                    });
                 });
             });
         }

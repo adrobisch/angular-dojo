@@ -1,10 +1,50 @@
 <!doctype html>
 <html data-ng-app="angular-dojo-test">
 	<head>
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dijit/themes/claro/claro.css" />
-		<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dojo/dojo.js"></script>
-    	<script src="http://code.angularjs.org/1.0.1/angular-1.0.1.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.2/dijit/themes/claro/claro.css" />    	
+	</head>
+    <body class="claro" data-ng-controller="TestController">
+
+    	<div>
+	    	<div data-dojo-widget="dijit/Calendar" data-ng-model="date" data-ng-change="log(date)"/>
+	    </div>
+	    Date: {{date}}
+
+	    <div>
+		   	<select
+		   		data-dojo-widget="dijit/form/FilteringSelect"
+		   		data-dojo-props="name: 'filterSelect'; searchAttr: search"
+		   		data-ng-model="selection"
+		   		data-dojo-store="store" data-ng-change="log(selection)"></select>
+		   	Selection: {{selection}}
+		</div>
+
+
+	   	<div>
+		   	<input data-dojo-widget="dijit/form/Textarea" data-ng-model="mytext" />
+		   	{{mytext}}
+		</div>
+
+		<div>
+		   	<input data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" />
+		   	{{date2}}
+		</div>
+
+		<div>
+		   	<form id="myform">
+			    <input type="radio" data-dojo-widget="dijit/form/RadioButton" name="drink" id="radioOne" data-ng-model="drink"  value="tea"/> <label for="radioOne">Tea</label> <br />
+			    <input type="radio" data-dojo-widget="dijit/form/RadioButton" name="drink" id="radioTwo" data-ng-model="drink" checked value="coffee"/> <label for="radioTwo">Coffee</label> <br />
+			</form>
+			{{drink}}
+		</div>
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/dojo/1.9.2/dojo/dojo.js"></script>
+    	
     	<script src="angular-dojo.js"></script>
+
+
     	<script>
     	
     	function TestController($scope) {
@@ -32,27 +72,16 @@
 			        ]
 			    });
 			});
-    		
-    		$scope.alert = function(msg) {
-    			alert(msg);
-    		};
+
+		  	$scope.log = function(msg) {
+	    		console.log(msg);
+	    	};
     	};
     	
     	var module = angular.module("angular-dojo-test", ['angular-dojo']);
 
+
+
     	</script>
-	</head>
-    <body class="claro" data-ng-controller="TestController">
-    	<div>
-	    	<div data-dojo-widget="dijit/Calendar" id="calendar" data-ng-model="date" data-ng-change="alert(date)"/>
-	    </div>
-	    <h1>Date 1: {{date}} </h1>
-	   	<select id="fSelect" data-dojo-widget="dijit/form/FilteringSelect" data-dojo-props="disabled: true; name: 'filterSelect'; searchAttr: search" data-ng-model="selection" data-ng-change="alert(selection)" data-dojo-store="store"></select>
-	   	<input id="textArea" data-dojo-widget="dijit/form/Textarea" data-ng-model="text" data-ng-change="alert(text)" />
-	   	<input id="dateBox" data-dojo-widget="dijit/form/DateTextBox" data-ng-model="date2" data-ng-change="alert(date2)" />
-	   	<form id="myform">
-		    <input type="radio" data-dojo-widget="dijit/form/RadioButton" name="drink" id="radioOne" data-ng-model="drink" data-ng-change="alert(drink)" value="tea"/> <label for="radioOne">Tea</label> <br />
-		    <input type="radio" data-dojo-widget="dijit/form/RadioButton" name="drink" id="radioTwo" data-ng-model="drink" data-ng-change="alert(drink)" checked value="coffee"/> <label for="radioTwo">Coffee</label> <br />
-		</form>
     </body>
 </html>
