@@ -17,3 +17,7 @@ angular.module('app', [
 Examples
 --------
 See [test.html](test.html)
+
+License
+-------
+*angular-dojo* may be used under the terms of the MIT license, see [LICENSE](LICENSE)
