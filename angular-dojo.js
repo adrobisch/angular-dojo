@@ -6,18 +6,10 @@ if (!String.prototype.trim) {
 angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
     
     var parseProps = function(props, scope) {
-        var result = {};
-        if (props != undefined) {
-            angular.forEach(props.split(";"), function (prop, index) {
-                var propSplit = prop.split(":");
-                if (scope.$parent[propSplit[1].trim()]) {
-                    result[propSplit[0].trim()] = scope.$parent[propSplit[1].trim()];
-                }else{
-                    result[propSplit[0].trim()] = eval(propSplit[1].trim());            
-                }
-            });
-        }
-        return result;
+        if (typeof props === 'undefined') return {};
+
+    	props = '[{' + props + '}]';
+        return eval(props)[0];
     };
     
     return {
