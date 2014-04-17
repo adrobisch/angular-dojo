@@ -1,8 +1,3 @@
-if (!String.prototype.trim) {
-   String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
-}
-
-
 angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
     
     var parseProps = function(props, scope) {
@@ -27,7 +22,7 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
         },
         link: function(scope, element, attrs, model) {
             require(["dojo/ready", "dijit/dijit", attrs.dojoWidget, "dojo/on"], function(ready, dijit, DojoWidget, on) {
-              
+          
                 ready(function () {                
                     scope.widget = new DojoWidget({}, element[0]);
                     
@@ -41,10 +36,15 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
                         }
                     });
                     
-                    attrs.$observe('ngModel', function() {
+                    scope.$watch('ngModel', function() {
                         if (scope.ngModel != undefined) {
-                            scope.widget.set('value', scope.ngModel);
-                            scope.widget.set('checked', scope.ngModel);
+                        	if (attrs.dojoWidget == 'dijit/form/FilteringSelect' || attrs.dojoWidget == 'dijit/form/Select') {
+                        		scope.widget.set('item', scope.ngModel);
+                        	}
+                        	else {
+                        		scope.widget.set('value', scope.ngModel);
+                                scope.widget.set('checked', scope.ngModel);
+                        	}
                         }
                     });
                     
@@ -55,7 +55,13 @@ angular.module('angular-dojo', []).directive('dojoWidget', function($timeout) {
                     });
 
                     on(scope.widget, "change", function(newValue) {
-                        scope.ngModel = newValue;
+                    	if (attrs.dojoWidget == 'dijit/form/FilteringSelect' || attrs.dojoWidget == 'dijit/form/Select') {
+                    		scope.ngModel = this.item;
+                    	}
+                    	else {
+                     		scope.ngModel = newValue;
+                    	}
+                    	                        
                         $timeout(function() {
                             scope.$apply();
                             if (scope.ngChange != undefined) {
